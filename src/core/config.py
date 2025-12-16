@@ -24,13 +24,13 @@ class Settings(BaseSettings):
     # --- 必选参数：中等并发常用 ---
     pool_size: int = 20            # 连接池基础大小，低：- 高：+
     max_overflow: int = 10         # 超出 pool_size 的最大连接数，低：- 高：+
-    pool_timeout:int = 30          # 连接超时时间（秒），低：+ 高：-
+    pool_timeout: int = 30          # 连接超时时间（秒），低：+ 高：-
     pool_pre_ping: bool = True     # 获取连接前是否检查可用性，低：False 高：True
 
     # --- 可选调优参数（高级场景） ---
-    pool_recycle:int = 3600        # 连接最大存活时间（秒），低：+ 高：-，避免长连接数据库踢掉
-    pool_use_lifo:bool = False     # 连接池取连接顺序，False=FIFO（默认），True=LIFO 可提高高并发命中率
-    echo:bool = False              # 是否打印 SQL，开发可打开，生产关闭
+    pool_recycle: int = 3600        # 连接最大存活时间（秒），低：+ 高：-，避免长连接数据库踢掉
+    pool_use_lifo: bool = False     # 连接池取连接顺序，False=FIFO（默认），True=LIFO 可提高高并发命中率
+    echo: bool = False              # 是否打印 SQL，开发可打开，生产关闭
 
     # SQLite 配置
     sqlite_db_path: str = "./data/aiforcouples.sqlite3"
@@ -70,7 +70,7 @@ class Settings(BaseSettings):
     # JWT 配置
     jwt_secret: str = "jowfeofi2039fj002bug03j2j230ffj903fj0egr93jfn"
 
-    modelmodel_config = SettingsConfigDict(
+    model_config = SettingsConfigDict(
         env_file='.env', 
         env_file_encoding='utf-8',
         case_sensitive=False
