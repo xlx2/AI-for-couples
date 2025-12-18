@@ -12,7 +12,7 @@ class DishRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def create(self, dish_data:Mapping[str, Any]) -> Dish:
+    async def create(self, dish_data: Mapping[str, Any]) -> Dish:
         """ 添加数据 """
         dish = Dish(**dish_data)
         self.session.add(dish)
@@ -23,6 +23,7 @@ class DishRepository:
             raise 
         await self.session.refresh(dish)
         logger.info("数据添加成功✅")
+        
         return dish
     
     async def get_by_id(self, dish_id: int) -> Dish | None:
@@ -30,10 +31,17 @@ class DishRepository:
         dish = await self.session.get(Dish, dish_id)
         if not dish:
             return None
+        
         return dish
     
-    async def get_all(self, search: str|None = None, order_by: str = "id", direction: str = "asc",
-                      limit: int = 10, offset: int = 0) -> list[Dish]:
+    async def get_all(
+            self, 
+            search: str | None = None, 
+            order_by: str = "id", 
+            direction: str = "asc",
+            limit: int = 10, 
+            offset: int = 0
+        ) -> list[Dish]:
         """ 获取所有数据 """
         query = select(Dish)
         # 搜索
@@ -43,7 +51,7 @@ class DishRepository:
                 or_(Dish.name.ilike(pattern), Dish.description.ilike(pattern))
             )
         # 排序
-        allowed_sort = ["id", "name", "created_at"]
+        allowed_sort = {"id", "name", "created_at"}
         if order_by not in allowed_sort:
             order_by = "id"
         order_column = getattr(Dish, order_by, Dish.id)
@@ -68,6 +76,7 @@ class DishRepository:
         await self.session.commit()
         await self.session.refresh(dish)
         logger.info(f"id: {dish_id} 的数据已经更新")
+
         return dish
     
     async def delete(self, dish_id: int) -> bool:

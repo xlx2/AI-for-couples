@@ -6,7 +6,7 @@ from src.dishes.schema import DishCreate, DishUpdate, DishResponse
 
 
 class DishService:
-    """ 业务逻辑层 """
+    """ 业务逻辑层（服务层） """
     def __init__(self, repository: DishRepository):
         self.repository = repository
 
@@ -20,14 +20,20 @@ class DishService:
             raise AlreadyExistsException("Dish with this name already exists.") from e
     
     async def get_dish_by_id(self, dish_id: int) -> DishResponse:
-        """ 通过 id 获取菜品"""
+        """ 通过 id 获取菜品 """
         dish = await self.repository.get_by_id(dish_id)
         if not dish:
             raise NotFoundException(f"Dish with id {dish_id} not found.")
         return DishResponse.model_validate(dish)
     
-    async def list_dishes(self, search: str | None = None, order_by: str = "id", 
-                          direction: str = "asc", limit: int = 10, offset: int = 0) -> list[DishResponse]:
+    async def list_dishes(
+            self, 
+            search: str | None = None, 
+            order_by: str = "id", 
+            direction: str = "asc", 
+            limit: int = 10, 
+            offset: int = 0
+        ) -> list[DishResponse]:
         """ 查询所有菜品 """
         dishes = await self.repository.get_all(search, order_by, direction, limit, offset)
         return [DishResponse.model_validate(dish) for dish in dishes]
